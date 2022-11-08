@@ -1,7 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
-const todoHandler = require('./routeHandler/todoHandler')
+const todoHandler = require('./routeHandler/todoHandler');
+const userHandler = require("./routeHandler/userHandler");
+
 
 // express app initialization
 const app = express();
@@ -15,7 +17,9 @@ mongoose
 
 
 //   Routing 
-app.use('/todo', todoHandler)
+app.use('/todo', todoHandler);
+app.use("/user", userHandler);
+
 
 
 app.listen(5000, () => {

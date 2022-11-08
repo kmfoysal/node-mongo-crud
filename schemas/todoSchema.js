@@ -12,7 +12,7 @@ const todoSchema = mongoose.Schema({
     },
     date: {
         type: Date,
-        defaultDate: Date.now
+        default: Date.now
     }
 
 })
