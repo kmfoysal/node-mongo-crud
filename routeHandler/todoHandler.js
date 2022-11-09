@@ -2,13 +2,15 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
+const checkLogin = require('../middlewares/checkLogin')
+
 // Create Model For todo schema
 const todoSchema = require("../schemas/todoSchema");
 
 const Todo = new mongoose.model("Todo", todoSchema);
 
 // Get All Todos
-router.get("/", async (req, res) => {
+router.get("/", checkLogin, async (req, res) => {
       await Todo.find({ status: "active" })
         .select({
           _id: 0,
@@ -67,30 +69,33 @@ router.post("/all", async (req, res) => {
 
 // Put a Todo
 router.put("/:id", async (req, res) => {
-  const result = await Todo.findByIdAndUpdate(
+
+  try {
+
+    const result = await Todo.findByIdAndUpdate(
     { _id: req.params.id },
     {
       $set: {
-        status: "active",
+        status: "inactive",
       },
     },
     {
       new: true,
       useFindAndModify: false,
-    },
-    (err) => {
-      if (err) {
-        res.status(500).json({
-          error: "There was a server side error!",
-        });
-      } else {
-        res.status(200).json({
-          message: "Todo was updated successfully!",
-        });
-      }
-    }
-  );
-  console.log(result);
+    })
+
+    console.log(result);
+
+    res.status(200).json({
+      message: "Todo was updated successfully!",
+    });
+    
+  } catch {
+    res.status(500).json({
+      error: "There was a server side error!",
+    });
+  }
+
 }
 );
 
